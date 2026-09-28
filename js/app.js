@@ -25,7 +25,6 @@
   ];
 
   const CHIPS = {
-    caution: "⚠️ Read this. You can’t skip the joke.",
     greeting: "🌷 Error 404: Normal opener not found",
     how_are_you: "💬 Deploying social skills…",
     is_morning: "☀️ Final verification",
@@ -45,7 +44,6 @@
   };
 
   const FOOTERS = {
-    caution: "🚫 Rollback unavailable. Editing also unavailable.",
     greeting: "📱 This process could have been a text message.",
     how_are_you: "💻 Works on my machine.",
     is_morning: "🫖 No rush. The server is emotionally prepared.",
@@ -65,7 +63,6 @@
   };
 
   const TITLES = {
-    caution: "One time only",
     greeting: "Hello",
     how_are_you: "How are you",
     is_morning: "Is it morning",
@@ -85,7 +82,6 @@
   };
 
   const SCREEN_LABELS = {
-    caution: "the caution",
     greeting: "the greeting",
     how_are_you: "how are you",
     is_morning: "is it morning",
@@ -553,7 +549,7 @@
   const FLOWER_BY_ID = Object.fromEntries(FLOWERS.map((flower) => [flower.id, flower]));
 
   const state = {
-    screen: "caution",
+    screen: "greeting",
     selected: [],
     wrongTaps: {},
     confirmLine: "",
@@ -784,21 +780,6 @@
 
   function views() {
     return {
-      caution: function () {
-        return (
-          '<article class="screen">' +
-          '<p class="kicker">Before anything else ⚠️</p>' +
-          '<div class="caution" role="note">' +
-          '<p class="caution-kicker">Caution</p>' +
-          '<h1 class="caution-title">This is a one-time thing.</h1>' +
-          "<p>You can’t edit your response. There is no back button, no undo, and no “wait, I misclicked.” Rollback was attempted. It failed on purpose.</p>" +
-          "</div>" +
-          '<div class="options">' +
-          choiceButton("accept-terms", "agree", "I agree", "cta") +
-          choiceButton("accept-terms", "no-choice", "Do I have the option to disagree? NO") +
-          "</div></article>"
-        );
-      },
       greeting: function () {
         return (
           '<article class="screen">' +
@@ -840,7 +821,6 @@
           '<article class="screen">' +
           '<p class="kicker">Step 3 ☀️</p>' +
           "<h1>Final verification question: is it morning?</h1>" +
-          '<p class="answer-hint" id="morning-hint" hidden>Hint: the correct answer is Yes.</p>' +
           '<div class="options">' +
           choiceButton("morning", "yes", "Yes ☀️") +
           choiceButton("morning", "no", "No 🌙") +
@@ -1379,14 +1359,6 @@
       }, reduceMotion ? 400 : 800);
       return;
     }
-    const hint = document.getElementById("morning-hint");
-    if (hint && hint.hidden) {
-      hint.hidden = false;
-      markCorrect("yes");
-      noteTry("morning", "No");
-      wiggle(button);
-      return;
-    }
     answer("Morning", "No", "morning");
     go("night_followup");
   }
@@ -1493,10 +1465,7 @@
     const button = event.target.closest("button");
     if (!button || !stage.contains(button)) return;
     const action = button.dataset.action;
-    if (action === "accept-terms") {
-      answer("Caution", button.dataset.value === "agree" ? "I agree" : "No option to disagree");
-      go("greeting");
-    } else if (action === "greet") onGreet(button);
+    if (action === "greet") onGreet(button);
     else if (action === "mood") onMood(button);
     else if (action === "continue-good") {
       answer("How are you", "Good", "how_are_you");
